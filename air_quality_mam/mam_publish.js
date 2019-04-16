@@ -19,9 +19,9 @@ const IOTA = require('iota.lib.js');
 //const moment = require('moment');
 //find a public node here
 //https://www.tangle-nodes.com/?sorts[load]=1&sorts[tls]=-1 
-//const iota = new IOTA({ provider: 'https://nodes.testnet.iota.org:443' }); 
-//const iota = new IOTA({ provider: 'https://irino.de:443' });
-const iota = new IOTA({ provider: 'https://power.benderiota.com:14267' }); //memory usage:17.9%, neighbours: 7
+//const iota = new IOTA({ provider: 'http://207.180.225.229:14265' }); 
+const iota = new IOTA({ provider: 'https://pow.iota.community:443' });
+//const iota = new IOTA({ provider: 'https://potato.iotasalad.org:14265' }); //memory usage:17.9%, neighbours: 7
 const MODE = 'public'; // public, private or restricted
 const SIDEKEY = 'mysecret'; // Enter only ASCII characters. Used only in restricted mode
 const SECURITYLEVEL = 3; // 1, 2 or 3
@@ -61,6 +61,7 @@ const executeDataPublishing = async function() {
 	 const jsonpath = "./test_samples/"; //path to the folder where JSON files saved
 	 
 	 var i;	
+	 var t_array =[]; //array to hold waiting time
     for (i = 1; i < 101; i++) {
        var full_path = jsonpath.concat("js",i,".json"); //full path to the JSON file           
        var textByLine = fs.readFileSync(full_path).toString().split("\n"); //parse JSON object
@@ -74,11 +75,14 @@ const executeDataPublishing = async function() {
        const root = await publish(json); //publish data
        var date1 = new Date();
        var t1 = date1.getTime();       
-       var watingtime = t1-t0;
-              
+       var waitingtime = t1-t0;     
+       
+       t_array[i-1] = waitingtime;
+        
        //print results 
-       console.log(`waiting_time:${watingtime}`); 
-       console.log(`location: ${json.location}, timestamp: ${json.timestamp}, pm2_5: ${json.pm2_5}, pm10: ${json.pm10},tvoc: ${json.tvoc}, co2: ${json.co2}, temperature: ${json.temperature}, humidity: ${json.humidity},illumination: ${json.illumination}, noise: ${json.noise}, hcho: ${json.hcho}, co: ${json.co}, c6h6: ${json.c6h6}, no2: ${json.no2}, o3: ${json.o3}`);
+       console.log(`waiting_time:${waitingtime}`); 
+       console.log(t_array.toString()); 
+       //console.log(`location: ${json.location}, timestamp: ${json.timestamp}, pm2_5: ${json.pm2_5}, pm10: ${json.pm10},tvoc: ${json.tvoc}, co2: ${json.co2}, temperature: ${json.temperature}, humidity: ${json.humidity},illumination: ${json.illumination}, noise: ${json.noise}, hcho: ${json.hcho}, co: ${json.co}, c6h6: ${json.c6h6}, no2: ${json.no2}, o3: ${json.o3}`);
  
     }  	
 }
